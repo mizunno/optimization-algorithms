@@ -30,6 +30,13 @@ bitFlipR chromosome = do
 onePointCrossover :: Chromosome -> Chromosome -> RandState [Chromosome]
 onePointCrossover chr1 chr2 = do
     p <- randomRange $ length chr1 - 1
+    let chr1' = splitAt p chr1
+    let chr2' = splitAt p chr2
+    return $ [fst chr1' ++ snd chr2', snd chr1' ++ fst chr2']
+
+onePointCrossover' :: Chromosome -> Chromosome -> RandState [Chromosome]
+onePointCrossover' chr1 chr2 = do
+    p <- randomRange $ length chr1 - 1
     let chr1_1 = [i | (i,n) <- zip chr1 [0..length chr1 - 1], n <= p]
     let chr1_2 = [i | (i,n) <- zip chr1 [0..length chr1 -1], n > p]
     let chr2_1 = [i | (i,n) <- zip chr2 [0..length chr2 - 1], n <= p]
