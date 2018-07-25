@@ -12,6 +12,7 @@ module OA.Utils.Utils (
 import Data.List as L
 import Data.Ord as O
 import System.Random as R
+import OA.Utils.RandState
 
 ----------------------
 -- Useful functions --
@@ -24,11 +25,17 @@ argMax :: (Ord b, Num b) => [a] -> (a -> b) -> a
 argMax xs f = L.maximumBy (O.comparing f) xs
 
 -- |Choose a random element from a list
+randomChoice' :: [a] -> RandState a
+randomChoice' xs = do
+    p <- randomRange $ length xs - 1
+    return $ xs !! p
+
+-- |Choose a random element from a list (No RandState Monad)
 randomChoice :: RandomGen g => g -> [a] -> (a, g)
 randomChoice g xs = (xs !! n, next)
     where
         (n, next) = randomR (0, length xs - 1) g
-
+        
 -- |Return a random list with bits.
 randomBinaryList :: RandomGen g => g -> Int -> [Int]
 randomBinaryList g ite = go g ite []
@@ -41,16 +48,18 @@ randomBinaryList g ite = go g ite []
                     go next (ite-1) (n:xs)
 
 -- |Return 'True' with probability p
-probability :: (RandomGen g, Random a, Ord a, Num a) => g -> a -> (Bool, g)
-probability g p = if p' < p then (True, g') else (False, g')
+probability :: (Ord a, Fractional a) => a -> RandState Bool
+probability prob = do
+    p <- randomRange 10
+    let p' = (fromIntegral p) / 10
+    return $ p' < prob
+
+probability' :: (RandomGen g, Random a, Ord a, Num a) => g -> a -> (Bool, g)
+probability' g p = if p' < p then (True, g') else (False, g')
     where
         (p', g') = R.randomR (0,1) g
 
--- |Flat a list (1 level)
-flat :: [[a]] -> [a]
-flat [] = []  
-flat (x:xs) = x ++ flat xs
-
+        
 -- ### IO MONAD ### --
 
 -- |Return a random bit (0,1) 
