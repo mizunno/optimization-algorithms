@@ -14,4 +14,4 @@ randomRange :: Int -> RandState Int
 randomRange upperBound = state $ randomR (1, upperBound)
 
 getR :: RandState Int
-getR = state $ random
+getR = state random

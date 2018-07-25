@@ -51,11 +51,11 @@ randomBinaryList g ite = go g ite []
 probability :: (Ord a, Fractional a) => a -> RandState Bool
 probability prob = do
     p <- randomRange 10
-    let p' = (fromIntegral p) / 10
+    let p' = fromIntegral p / 10
     return $ p' < prob
 
 probability' :: (RandomGen g, Random a, Ord a, Num a) => g -> a -> (Bool, g)
-probability' g p = if p' < p then (True, g') else (False, g')
+probability' g p = (p' < p, g')
     where
         (p', g') = R.randomR (0,1) g
 
@@ -72,7 +72,7 @@ randomChoiceIO xs = getStdGen >>= \g -> return $ fst $ randomChoice g xs
 
 -- |Return 'True' with probability p
 probabilityIO :: (R.Random a, Ord a, Num a) => a -> IO Bool
-probabilityIO p = randomIO >>= \q -> return $! if q < p then True else False
+probabilityIO p = randomIO >>= \q -> return $! (q < p)
 
 probabilityIO' :: (R.Random a, Ord a, Num a) => a -> IO Bool
-probabilityIO' p = randomRIO (0, 10) >>= \q -> return $! if q < (p*10) then True else False
+probabilityIO' p = randomRIO (0, 10) >>= \q -> return $! (q < (p * 10))

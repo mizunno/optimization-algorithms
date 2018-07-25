@@ -36,13 +36,13 @@ instance Problem Napsack [Int] where
     initial (NS size numO weights values) = randomBinaryList (mkStdGen 927456021) numO
 
     fitness (NS size numO weights values) solution = if w <= 15 
-        then fromIntegral $ v 
+        then fromIntegral v 
         else fromIntegral $ v - w * 10
         where
-            w = sum $ [w | (x,w) <- zip solution weights, x == 1]
-            v = sum $ [v | (x,v) <- zip solution values, x == 1]
+            w = sum [w | (x,w) <- zip solution weights, x == 1]
+            v = sum [v | (x,v) <- zip solution values, x == 1]
 
-    neighborhood (NS _ _ _ _) solution = [bitFlip solution n | n <- [0..(length solution)-1]]
+    neighborhood NS{} solution = [bitFlip solution n | n <- [0..length solution - 1]]
 
 -- List of weights
 ws :: [Int]
@@ -58,17 +58,13 @@ knapSack = NS 15 8 ws vs
 -- Funtions to run an algorithm
 
 runSA = do
-    putStrLn ""
-    putStrLn "Resolving with Simulated Annealing..."
+    print "Resolving with Simulated Annealing..."
     (solution,value) <- simulatedAnnealing knapSack 100 100.0
-    putStrLn $ show $ "Solution: " ++ show solution
-    putStrLn $ show $ "Fitness value: " ++ show value
-    putStrLn ""
+    print $ show $ "Solution: " ++ show solution
+    print $ show $ "Fitness value: " ++ show value
 
 runHC = do 
-    putStrLn ""
-    putStrLn "Resolving with Hill Climbing..."
+    print "Resolving with Hill Climbing..."
     let (solution,value) = hillClimbing knapSack
-    putStrLn $ show $ "Solution: " ++ show solution
-    putStrLn $ show $ "Fitness value: " ++ show value
-    putStrLn ""
+    print $ show $ "Solution: " ++ show solution
+    print $ show $ "Fitness value: " ++ show value
