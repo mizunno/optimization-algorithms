@@ -10,6 +10,8 @@ import OA.Utils.Operators
 import OA.Algorithms.SimulatedAnnealing
 import OA.Algorithms.HillClimbing
 import System.Random
+import OA.Utils.RandState
+import Control.Monad.State
 
 ----------------------------------
 -- Instance of Knapsack Problem --
@@ -59,7 +61,7 @@ knapSack = NS 15 8 ws vs
 
 runSA = do
     print "Resolving with Simulated Annealing..."
-    (solution,value) <- simulatedAnnealing knapSack 100 100.0
+    let (solution,value) = evalState (simulatedAnnealing knapSack 100 100.0) (mkStdGen 1)
     print $ show $ "Solution: " ++ show solution
     print $ show $ "Fitness value: " ++ show value
 

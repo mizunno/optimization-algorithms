@@ -1,6 +1,6 @@
 module OA.Utils.Utils (
     argMax,
-    randomChoice,
+    randomChoice',
     randomChoiceIO,
     probability,
     probabilityIO,
