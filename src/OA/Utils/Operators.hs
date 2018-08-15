@@ -9,9 +9,13 @@ import OA.Utils.RandState
 import Data.List as L
 import Data.Ord as O
 import System.Random
+import Control.Monad
 
 type Gen = Int
 type Chromosome = [Gen]
+type Population = [Chromosome]
+type Fitness = (Chromosome -> Double)
+--type Crossover = (Chromosome -> Chromosome -> RandState Chromosome)
 
 -- |Bit Flip operator. Flip one bit at given position. Pure functional.
 bitFlip :: Chromosome -> Int -> Chromosome
@@ -55,3 +59,48 @@ twoPointCrossover chr1 chr2 = do
     let chr2_2 = [i | (i,n) <- zip chr2 [0..length chr2 - 1], n >= p1 && n <= p2]
     let chr2_3 = [i | (i,n) <- zip chr2 [0..length chr2 - 1], n > p2]
     return [chr1_1 ++ chr2_2 ++ chr1_3, chr2_1 ++ chr1_2 ++ chr2_3]
+
+-- |Returns the probability of a chromosome to be selected
+probabilityToBeSelected :: Population -> Fitness -> Chromosome-> Double
+probabilityToBeSelected pop fitness chr = (fitness chr) / total
+    where total = sum $ map (fitness) pop
+
+-- |Select the fittest chromosomes
+fittestSelection :: Population -> Fitness -> Population
+fittestSelection pop fitness = (take (div (length pop) 2) . reverse) $ L.sortOn (fitness) pop
+
+
+-- |Roulette Wheel Selection method
+rouletteWheelSelection :: Population -> Fitness -> RandState Population
+rouletteWheelSelection pop fitness = spin pop [] (div (length pop) 2)
+    where spin pop pop' ite = if ite == 0 then return pop' else do
+            p <- randomRange01
+            let chrIndex = select pop p fitness
+            let chr = pop !! chrIndex
+            spin pop (chr:pop') (ite-1)
+
+choose :: Ord a => a -> [a] -> a
+choose p [x] = x
+choose p (x:y:ys) = if x <= p && p < y then x
+                    else choose p (y:ys)
+
+select :: Population -> Double -> Fitness -> Int
+select pop p fitness = chrIndex
+    where pi = map (probabilityToBeSelected pop fitness) pop
+          piAcum = (scanl1 (+) $ pi)
+          chrIndex = elemIndex' (choose p piAcum) piAcum 0
+
+-- |It crosses all the chromosomes in a population
+--populationCrossover :: Population -> Crossover -> RandState Population
+populationCrossover pop crossFunction = do
+    let (pop1,pop2) = splitAt (div (length pop) 2) pop
+    pop' <- zipWithM (crossFunction) pop1 pop2
+    return pop' 
+
+
+-- Funciones de ejemplo
+fitness :: Fitness
+fitness chr = fromIntegral $ sum chr
+
+popEx :: Population
+popEx = [[1,1],[2,2],[1,2],[3,1],[6,0],[0,0]]

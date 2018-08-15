@@ -29,8 +29,8 @@ data Napsack s = NS {
     size :: Int, 
     numObjects :: Int,
     weights :: [Int],
-    values :: [Int]} 
-    deriving (Show)
+    values :: [Int]
+    } deriving (Show)
 
 instance Problem Napsack [Int] where
 
@@ -62,11 +62,11 @@ knapSack = NS 15 8 ws vs
 runSA = do
     print "Resolving with Simulated Annealing..."
     let (solution,value) = evalState (simulatedAnnealing knapSack 100 100.0) (mkStdGen 1)
-    print $ show $ "Solution: " ++ show solution
-    print $ show $ "Fitness value: " ++ show value
+    print $ "Solution: " ++ show solution
+    print $ "Fitness value: " ++ show value
 
 runHC = do 
     print "Resolving with Hill Climbing..."
     let (solution,value) = hillClimbing knapSack
-    print $ show $ "Solution: " ++ show solution
-    print $ show $ "Fitness value: " ++ show value
+    print $ "Solution: " ++ show solution
+    print $ "Fitness value: " ++ show value

@@ -1,5 +1,6 @@
 module OA.Utils.Utils (
     argMax,
+    elemIndex',
     randomChoice',
     randomChoiceIO,
     probability,
@@ -19,6 +20,12 @@ import OA.Utils.RandState
 ----------------------
 
 -- ### NO IO MONAD ### --
+
+-- |Returns the index of a given element
+elemIndex' :: Eq a => a -> [a] -> Int -> Int
+elemIndex' e (x:xs) l
+        | e == x = l
+        | otherwise = elemIndex' e xs l+1
 
 -- |Return the element (from a list) that maximize the given function
 argMax :: (Ord b, Num b) => [a] -> (a -> b) -> a
