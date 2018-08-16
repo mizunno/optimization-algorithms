@@ -23,6 +23,7 @@ import OA.Utils.RandState
 
 -- |Returns the index of a given element
 elemIndex' :: Eq a => a -> [a] -> Int -> Int
+elemIndex' e [] l = l-1
 elemIndex' e (x:xs) l
         | e == x = l
         | otherwise = elemIndex' e xs l+1
@@ -59,10 +60,10 @@ probability :: (Ord a, Fractional a) => a -> RandState Bool
 probability prob = do
     p <- randomRange 10
     let p' = fromIntegral p / 10
-    return $ p' < prob
+    return $ p' <= prob
 
 probability' :: (RandomGen g, Random a, Ord a, Num a) => g -> a -> (Bool, g)
-probability' g p = (p' < p, g')
+probability' g p = (p' <= p, g')
     where
         (p', g') = R.randomR (0,1) g
 

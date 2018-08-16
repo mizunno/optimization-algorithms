@@ -1,7 +1,11 @@
 module OA.Utils.Operators (
     bitFlip,
     bitFlipR,
-    onePointCrossover
+    onePointCrossover,
+    rouletteWheelSelection,
+    popEx,
+    crossPopulation,
+    mutatePopulation,
 ) where
 
 import OA.Utils.Utils
@@ -15,7 +19,7 @@ type Gen = Int
 type Chromosome = [Gen]
 type Population = [Chromosome]
 type Fitness = (Chromosome -> Double)
---type Crossover = (Chromosome -> Chromosome -> RandState Chromosome)
+type Crossover = (Chromosome -> Chromosome -> RandState [Chromosome])
 
 -- |Bit Flip operator. Flip one bit at given position. Pure functional.
 bitFlip :: Chromosome -> Int -> Chromosome
@@ -50,8 +54,8 @@ onePointCrossover' chr1 chr2 = do
 -- |Takes two chromosomes and combine them cutting at two points
 twoPointCrossover :: Chromosome -> Chromosome -> RandState [Chromosome]
 twoPointCrossover chr1 chr2 = do
-    p1 <- randomRange $ length chr1 - 1
-    p2 <- randomRange $ length chr1 - 1
+    p1 <- randomRange $ length chr1 - 2
+    p2 <- randomRange $ length chr1 - 2
     let chr1_1 = [i | (i,n) <- zip chr1 [0..length chr1 - 1], n < p1]
     let chr1_2 = [i | (i,n) <- zip chr1 [0..length chr1 - 1], n >= p1 && n <= p2]
     let chr1_3 = [i | (i,n) <- zip chr1 [0..length chr1 - 1], n > p2]
@@ -91,16 +95,49 @@ select pop p fitness = chrIndex
           chrIndex = elemIndex' (choose p piAcum) piAcum 0
 
 -- |It crosses all the chromosomes in a population
---populationCrossover :: Population -> Crossover -> RandState Population
-populationCrossover pop crossFunction = do
+crossPopulation :: Population -> Crossover -> RandState Population
+crossPopulation pop crossFunction = do
     let (pop1,pop2) = splitAt (div (length pop) 2) pop
     pop' <- zipWithM (crossFunction) pop1 pop2
-    return pop' 
+    return $ concat [pop,join pop']
 
+-- |It mutates all the chromosomes in a population with a probability given
+mutatePopulation :: Double -> Population -> RandState Population
+mutatePopulation p = mapM (bitFlipRWithProb p)
+
+
+bitFlipRWithProb :: Double -> Chromosome -> RandState Chromosome
+bitFlipRWithProb p chromosome = do
+    i <- randomRange $ length chromosome - 1
+    runMutation <- probability p 
+    return $ case runMutation of
+        True -> bitFlip chromosome i
+        False -> chromosome
+
+test pop _ _ _ 0 = return pop
+test pop mr fitness crf gen = do
+    pops <- rouletteWheelSelection pop fitness
+    popc <- crossPopulation pops crf
+    popm <- mutatePopulation mr popc
+    test popm mr fitness crf (gen-1)
+    --return popm
 
 -- Funciones de ejemplo
 fitness :: Fitness
 fitness chr = fromIntegral $ sum chr
 
 popEx :: Population
-popEx = [[1,1],[2,2],[1,2],[3,1],[6,0],[0,0]]
+popEx = [[1,1,1,1,1,1,1,1],[1,0,1,1,1,0,1,1],[1,1,0,1,0,1,1,1],[1,1,0,1,0,1,0,1],
+        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
+        [1,0,1,0,0,1,0,1],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],
+        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
+        [1,1,0,1,1,1,1,1],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],
+        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
+        [1,1,1,1,1,0,1,1],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],
+        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+
+popEx2 :: Population
+popEx2 = [[1,1,1,1],[0,0,0,0],[1,1,1,1],[0,0,0,0]]
+
+popEx3 :: Population
+popEx3 = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]

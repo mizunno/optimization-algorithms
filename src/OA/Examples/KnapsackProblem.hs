@@ -5,10 +5,12 @@ module OA.Examples.KnapsackProblem (
 ) where
 
 import OA.Core.Problem
+import OA.Core.ProblemGA
 import OA.Utils.Utils
 import OA.Utils.Operators
 import OA.Algorithms.SimulatedAnnealing
 import OA.Algorithms.HillClimbing
+import OA.Algorithms.GeneticAlgorithm
 import System.Random
 import OA.Utils.RandState
 import Control.Monad.State
@@ -31,6 +33,25 @@ data Napsack s = NS {
     weights :: [Int],
     values :: [Int]
     } deriving (Show)
+
+instance ProblemGA Napsack [Int] where
+
+    initialPopulation (NS _ _ _ _) = return popEx
+
+    selection p@(NS _ _ _ _) pop = rouletteWheelSelection pop (fitnessGA p)
+
+    crossover (NS _ _ _ _) pop = crossPopulation pop onePointCrossover
+
+    mutation (NS _ _ _ _) pop mr = mutatePopulation mr pop
+    
+    fitnessGA (NS size numO weights values) solution = if w <= 15 
+        then fromIntegral v 
+        else fromIntegral $ v - w * 10
+        where
+            w = sum [w | (x,w) <- zip solution weights, x == 1]
+            v = sum [v | (x,v) <- zip solution values, x == 1]
+
+
 
 instance Problem Napsack [Int] where
 
@@ -70,3 +91,8 @@ runHC = do
     let (solution,value) = hillClimbing knapSack
     print $ "Solution: " ++ show solution
     print $ "Fitness value: " ++ show value
+
+runGA = do
+    print "Resolving with Genetic Algorithm..."
+    let pop = evalState (geneticAlgorithm knapSack 0.5 100) (mkStdGen 1)
+    print $ pop

@@ -4,15 +4,17 @@ module OA.Core.ProblemGA(
     ProblemGA (..)
 ) where
 
+import OA.Utils.RandState
+
 class ProblemGA p s where
 
-    initialPopulation :: p s -> [s]
+    initialPopulation :: p s -> RandState [s]
 
-    selection :: p s -> [s] -> [s]
+    selection :: p s -> [s] -> RandState [s]
 
-    crossover :: p s -> s -> s -> [s]
+    crossover :: p s -> [s] -> RandState [s]
 
-    mutation :: p s -> s -> Double -> s
+    mutation :: p s -> [s] -> Double -> RandState [s]
 
-    fitness :: p s -> s -> Double
+    fitnessGA :: p s -> s -> Double
 
