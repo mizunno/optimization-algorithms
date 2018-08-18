@@ -23,7 +23,7 @@ randomRange01' :: RandState Double
 randomRange01' = do
     p <- randomRange 10
     let p' = fromIntegral p / 10
-    return $ p'
+    return p'
 
 randomBinary :: RandState Int
 randomBinary = state $ randomR (0, 1)

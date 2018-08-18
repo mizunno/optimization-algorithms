@@ -13,7 +13,7 @@ import OA.Utils.RandState
 
 -- |Genetic Algorithm
 geneticAlgorithm :: (ProblemGA p s) => p s -> GAInfo -> RandState [s]
-geneticAlgorithm prob (GAInfo pSize mutRate gen fitLB)= evolve mutRate gen fitLB (initialPopulation prob pSize)
+geneticAlgorithm prob (GAInfo pSize mutRate gen fitLB) = evolve mutRate gen fitLB (initialPopulation prob pSize)
     where
         evolve _ 0 _ pop = pop
         evolve mutRate gen fitLB pop = do

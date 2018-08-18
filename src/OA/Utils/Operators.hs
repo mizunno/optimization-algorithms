@@ -61,8 +61,8 @@ bitFlipRWithProb p chromosome = do
 crossPopulation :: Population -> Crossover -> RandState Population
 crossPopulation pop crossFunction = do
     let (pop1,pop2) = splitAt (div (length pop) 2) pop
-    pop' <- zipWithM (crossFunction) pop1 pop2
-    return $ (pop ++ join pop')
+    pop' <- zipWithM crossFunction pop1 pop2
+    return (pop ++ join pop')
 
 -- |Takes two chromosomes and combine them cutting at one point
 onePointCrossover :: Chromosome -> Chromosome -> RandState [Chromosome]
@@ -100,12 +100,12 @@ twoPointCrossover chr1 chr2 = do
 
 -- |Returns the probability of a chromosome to be selected
 probabilityToBeSelected :: Population -> Fitness -> Chromosome-> Double
-probabilityToBeSelected pop fitness chr = (fitness chr) / total
-    where total = sum $ map (fitness) pop
+probabilityToBeSelected pop fitness chr = fitness chr / total
+    where total = sum $ map fitness pop
 
 -- |Select the fittest chromosomes
 fittestSelection :: Population -> Fitness -> Population
-fittestSelection pop fitness = (take (div (length pop) 2) . reverse) $ L.sortOn (fitness) pop
+fittestSelection pop fitness = (take (div (length pop) 2) . reverse) $ L.sortOn fitness pop
 
 -- |Roulette Wheel Selection method
 rouletteWheelSelection :: Population -> Fitness -> RandState Population
