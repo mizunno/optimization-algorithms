@@ -12,10 +12,6 @@ import OA.Utils.RandState
 -- Simulate Annealing algorithm --
 ----------------------------------
 
-{- TODO:
-    - Re-implement with RandState monad
--}
-
 -- |Simulated Annealing algorithm
 simulatedAnnealing' :: (Problem p s) => p s -> Int -> Double -> IO (s,Double)
 simulatedAnnealing' prob ite temp = cool ite ite temp (initial prob)

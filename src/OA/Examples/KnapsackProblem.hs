@@ -36,27 +36,25 @@ data Napsack s = NS {
 
 instance ProblemGA Napsack [Int] where
 
-    initialPopulation (NS _ _ _ _) = return popEx
+    initialPopulation (NS _ numO _ _) pSize = replicateM pSize $ randomBinaryList numO 
 
-    selection p@(NS _ _ _ _) pop = rouletteWheelSelection pop (fitnessGA p)
+    selection p@NS{} pop = rouletteWheelSelection pop (fitnessGA p)
 
-    crossover (NS _ _ _ _) pop = crossPopulation pop onePointCrossover
+    crossover NS{} pop = crossPopulation pop onePointCrossover
 
-    mutation (NS _ _ _ _) pop mr = mutatePopulation mr pop
+    mutation NS{} pop mr = mutatePopulation mr pop
     
     fitnessGA (NS size numO weights values) solution = if w <= 15 
         then fromIntegral v 
-        else fromIntegral $ v - w * 10
+        else fromIntegral $ v - w * 100
         where
             w = sum [w | (x,w) <- zip solution weights, x == 1]
             v = sum [v | (x,v) <- zip solution values, x == 1]
 
 
-
 instance Problem Napsack [Int] where
 
-    -- generate the initial solution randomly
-    initial (NS size numO weights values) = randomBinaryList (mkStdGen 927456021) numO
+    initial (NS size numO weights values) = randomBinaryList' (mkStdGen 927456021) numO
 
     fitness (NS size numO weights values) solution = if w <= 15 
         then fromIntegral v 
@@ -81,8 +79,9 @@ knapSack = NS 15 8 ws vs
 -- Funtions to run an algorithm
 
 runSA = do
+    g <- getStdGen
     print "Resolving with Simulated Annealing..."
-    let (solution,value) = evalState (simulatedAnnealing knapSack 100 100.0) (mkStdGen 1)
+    let (solution,value) = evalState (simulatedAnnealing knapSack 100 100.0) g
     print $ "Solution: " ++ show solution
     print $ "Fitness value: " ++ show value
 
@@ -92,7 +91,14 @@ runHC = do
     print $ "Solution: " ++ show solution
     print $ "Fitness value: " ++ show value
 
+gaInfo :: GAInfo
+gaInfo = GAInfo 16 0.1 100 18
+
 runGA = do
+    g <- getStdGen
     print "Resolving with Genetic Algorithm..."
-    let pop = evalState (geneticAlgorithm knapSack 0.5 100) (mkStdGen 1)
-    print $ pop
+    let pop = evalState (geneticAlgorithm knapSack gaInfo) g
+    let best = argMax pop (fitnessGA knapSack)
+    let value = fitnessGA knapSack best
+    print $ "Solution: " ++ show best
+    print $ "Fitness value: " ++ show value

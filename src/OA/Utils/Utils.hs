@@ -1,12 +1,13 @@
 module OA.Utils.Utils (
     argMax,
+    argMin,
     elemIndex',
     randomChoice',
     randomChoiceIO,
     probability,
     probabilityIO,
     probabilityIO',
-    randomBinaryList,
+    randomBinaryList',
     randomBinaryIO
 ) where
 
@@ -32,6 +33,10 @@ elemIndex' e (x:xs) l
 argMax :: (Ord b, Num b) => [a] -> (a -> b) -> a
 argMax xs f = L.maximumBy (O.comparing f) xs
 
+-- |Return the element (from a list) that minimize the given function
+argMin :: (Ord b, Num b) => (a -> b) -> [a] -> a
+argMin f = L.minimumBy (O.comparing f)
+
 -- |Choose a random element from a list
 randomChoice' :: [a] -> RandState a
 randomChoice' xs = do
@@ -43,10 +48,10 @@ randomChoice :: RandomGen g => g -> [a] -> (a, g)
 randomChoice g xs = (xs !! n, next)
     where
         (n, next) = randomR (0, length xs - 1) g
-        
+
 -- |Return a random list with bits.
-randomBinaryList :: RandomGen g => g -> Int -> [Int]
-randomBinaryList g ite = go g ite []
+randomBinaryList' :: RandomGen g => g -> Int -> [Int]
+randomBinaryList' g ite = go g ite []
     where
         go :: RandomGen g => g -> Int -> [Int] -> [Int]
         go g' ite xs = let (n,next) = randomR (0, 1) g' in

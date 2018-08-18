@@ -8,7 +8,7 @@ import OA.Utils.RandState
 
 class ProblemGA p s where
 
-    initialPopulation :: p s -> RandState [s]
+    initialPopulation :: p s -> Int -> RandState [s]
 
     selection :: p s -> [s] -> RandState [s]
 
