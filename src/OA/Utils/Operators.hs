@@ -3,6 +3,7 @@ module OA.Utils.Operators (
     bitFlipR,
     onePointCrossover,
     rouletteWheelSelection,
+    tournamentSelection,
     popEx,
     crossPopulation,
     mutatePopulation,

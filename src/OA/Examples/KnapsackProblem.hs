@@ -38,7 +38,7 @@ instance ProblemGA Napsack [Int] where
 
     initialPopulation (NS _ numO _ _) pSize = replicateM pSize $ randomBinaryList numO 
 
-    selection p@NS{} pop = rouletteWheelSelection pop (fitnessGA p)
+    selection p@NS{} pop = tournamentSelection pop (fitnessGA p) 2
 
     crossover NS{} pop = crossPopulation pop onePointCrossover
 
