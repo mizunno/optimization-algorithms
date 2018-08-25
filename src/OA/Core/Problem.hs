@@ -4,23 +4,18 @@ module OA.Core.Problem (
     Problem (..)
 ) where
 
-
-{- 
-Typeclass for a problem:
-    - 'p' represents the problem
-    - 's' represents a solution
-At this moment, this implementation its thinking to use with Hill Climbing. But
-soon will be an abstract class to use with other algorithms.
--}
+import OA.Utils.RandState
 
 class Problem p s where
 
     -- |Initial solution
-    initial :: p s -> s
+    initial :: p s -> RandState s
 
     -- |Function that evaluate a given solution
     fitness :: p s -> s -> Double
 
-    -- |Returns a list with solutions that can be reached from 's'. It
-    -- needs a function to tweak the current solution.
+    -- |Returns a list with solutions that can be reached from 's'
     neighborhood :: p s -> s -> [s]
+
+    -- |Function to update temperature. Only with 
+    tempUpdate :: (Fractional a) => p s -> a -> Int -> a

@@ -4,9 +4,10 @@ module OA.Utils.Operators (
     onePointCrossover,
     rouletteWheelSelection,
     tournamentSelection,
-    popEx,
     crossPopulation,
     mutatePopulation,
+    geometricUpdate,
+    constantUpdate,
 ) where
 
 import OA.Utils.Utils
@@ -131,22 +132,16 @@ select pop p fitness = chrIndex
 tournamentSelection :: Population -> Fitness -> Int -> RandState Population
 tournamentSelection pop fitness k = replicateM (div (length pop) 2) (`argMax` fitness) <$> replicateM k (randomChoice' pop)
 
--- Funciones de ejemplo
-fitness :: Fitness
-fitness chr = fromIntegral $ sum chr
+---------------------------
+-- TEMPERATURE SCHEDULES --
+---------------------------
 
-popEx :: Population
-popEx = [[1,1,1,1,1,1,1,1],[1,0,1,1,1,0,1,1],[1,1,0,1,0,1,1,1],[1,1,0,1,0,1,0,1],
-        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
-        [1,0,1,0,0,1,0,1],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],
-        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
-        [1,1,0,1,1,1,1,1],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],
-        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
-        [1,1,1,1,1,0,1,1],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],[1,0,1,0,1,0,1,0],
-        [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+-- |Constant schedule
+constantUpdate :: (Fractional a) => a -> Int -> a -> a
+constantUpdate t 0 alfa = t - alfa
+constantUpdate t ite _ = t
 
-popEx2 :: Population
-popEx2 = [[0,0,0,0],[0,0,0,1],[0,0,1,0],[0,0,1,1]]
-
-popEx3 :: Population
-popEx3 = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+-- |Geometric schedule
+geometricUpdate :: (Fractional a) => a -> Int -> a -> a
+geometricUpdate t 0 alfa = alfa * t
+geometricUpdate t ite _ = t

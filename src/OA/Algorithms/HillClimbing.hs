@@ -1,22 +1,23 @@
 {-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
 
 module OA.Algorithms.HillClimbing (
-    hillClimbing
+    hillClimbing,
 ) where
 
 import OA.Core.Problem
 import OA.Utils.Utils
+import OA.Utils.RandState
 
 -----------------------------
 -- Hill Climbing algorithm --
 -----------------------------
 
 -- |Hill Climbing algorithm
-hillClimbing :: (Problem p s) => p s -> (s,Double)
-hillClimbing problem = climb $ initial problem
+hillClimbing :: (Problem p s) => p s -> RandState s
+hillClimbing problem = initial problem >>= (\ini -> climb ini)
             where 
                 climb solution = if valueNeighbour <= valueSolution
-                    then (solution,valueSolution)
+                    then return solution
                     else climb neighbour
                     where
                         valueNeighbour = fitness problem neighbour

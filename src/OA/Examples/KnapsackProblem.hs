@@ -54,7 +54,7 @@ instance ProblemGA Napsack [Int] where
 
 instance Problem Napsack [Int] where
 
-    initial (NS size numO weights values) = randomBinaryList' (mkStdGen 927456021) numO
+    initial (NS size numO weights values) = randomBinaryList numO
 
     fitness (NS size numO weights values) solution = if w <= 15 
         then fromIntegral v 
@@ -64,6 +64,8 @@ instance Problem Napsack [Int] where
             v = sum [v | (x,v) <- zip solution values, x == 1]
 
     neighborhood NS{} solution = [bitFlip solution n | n <- [0..length solution - 1]]
+
+    tempUpdate _ t ite = constantUpdate t ite 1
 
 -- List of weights
 ws :: [Int]
@@ -78,21 +80,27 @@ knapSack = NS 15 8 ws vs
 
 -- Funtions to run an algorithm
 
+saInfo :: SAInfo
+saInfo = SAInfo 100 100.0
+
 runSA = do
     g <- getStdGen
     print "Resolving with Simulated Annealing..."
-    let (solution,value) = evalState (simulatedAnnealing knapSack 100 100.0) g
+    let solution = evalState (simulatedAnnealing knapSack saInfo) g
+    let value = fitness knapSack solution
     print $ "Solution: " ++ show solution
     print $ "Fitness value: " ++ show value
 
 runHC = do 
+    g <- getStdGen
     print "Resolving with Hill Climbing..."
-    let (solution,value) = hillClimbing knapSack
+    let solution = evalState (hillClimbing knapSack) g
+    let value = fitness knapSack solution
     print $ "Solution: " ++ show solution
     print $ "Fitness value: " ++ show value
 
 gaInfo :: GAInfo
-gaInfo = GAInfo 16 0.1 100 18
+gaInfo = GAInfo 128 0.1 100 18
 
 runGA = do
     g <- getStdGen
