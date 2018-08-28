@@ -100,7 +100,7 @@ runHC = do
     print $ "Fitness value: " ++ show value
 
 gaInfo :: GAInfo
-gaInfo = GAInfo 128 0.1 100 18
+gaInfo = GAInfo 512 0.1 200 18
 
 runGA = do
     g <- getStdGen

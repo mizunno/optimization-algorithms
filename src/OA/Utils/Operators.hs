@@ -2,6 +2,7 @@ module OA.Utils.Operators (
     bitFlip,
     bitFlipR,
     onePointCrossover,
+    twoPointCrossover,
     rouletteWheelSelection,
     tournamentSelection,
     crossPopulation,
@@ -85,14 +86,14 @@ onePointCrossover' chr1 chr2 = do
 -- |Takes two chromosomes and combine them cutting at two points
 twoPointCrossover :: Chromosome -> Chromosome -> RandState [Chromosome]
 twoPointCrossover chr1 chr2 = do
-    p1 <- randomRange $ length chr1 - 2
-    p2 <- randomRange $ length chr1 - 2
-    let chr1_1 = [i | (i,n) <- zip chr1 [0..length chr1 - 1], n < p1]
-    let chr1_2 = [i | (i,n) <- zip chr1 [0..length chr1 - 1], n >= p1 && n <= p2]
-    let chr1_3 = [i | (i,n) <- zip chr1 [0..length chr1 - 1], n > p2]
-    let chr2_1 = [i | (i,n) <- zip chr2 [0..length chr2 - 1], n < p1]
-    let chr2_2 = [i | (i,n) <- zip chr2 [0..length chr2 - 1], n >= p1 && n <= p2]
-    let chr2_3 = [i | (i,n) <- zip chr2 [0..length chr2 - 1], n > p2]
+    p1 <- randomRange $ length chr1 - 1
+    p2 <- randomRange2 p1 $ length chr1 - 1
+    let chr1_1 = [i | (i,n) <- zip chr1 [0..length chr1], n < p1]
+    let chr1_2 = [i | (i,n) <- zip chr1 [0..length chr1], n >= p1 && n <= p2]
+    let chr1_3 = [i | (i,n) <- zip chr1 [0..length chr1], n > p2]
+    let chr2_1 = [i | (i,n) <- zip chr2 [0..length chr2], n < p1]
+    let chr2_2 = [i | (i,n) <- zip chr2 [0..length chr2], n >= p1 && n <= p2]
+    let chr2_3 = [i | (i,n) <- zip chr2 [0..length chr2], n > p2]
     return [chr1_1 ++ chr2_2 ++ chr1_3, chr2_1 ++ chr1_2 ++ chr2_3]
 
 -------------------------

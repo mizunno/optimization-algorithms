@@ -1,6 +1,7 @@
 module OA.Utils.RandState (
     randomRange,
     randomRange01,
+    randomRange2,
     getR,
     randomBinary,
     randomBinaryList,
@@ -14,7 +15,10 @@ import Control.Monad
 type RandState = State StdGen
 
 randomRange :: Int -> RandState Int
-randomRange upperBound = state $ randomR (1, upperBound)
+randomRange upperBound = state $ randomR (0, upperBound)
+
+randomRange2 :: Int -> Int -> RandState Int
+randomRange2 lowerBound upperBound = state $ randomR (lowerBound, upperBound)
 
 randomRange01 :: RandState Double
 randomRange01 = randomRange 10 >>= (\p -> return $ fromIntegral p / 10)
