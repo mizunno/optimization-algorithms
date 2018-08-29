@@ -56,7 +56,7 @@ instance Problem Napsack [Int] where
 
     initial (NS size numO weights values) = randomBinaryList numO
 
-    fitness (NS size numO weights values) solution = if w <= 15 
+    fitness (NS size numO weights values) solution = if w <= size 
         then fromIntegral v 
         else fromIntegral $ v - w * 10
         where
@@ -69,19 +69,19 @@ instance Problem Napsack [Int] where
 
 -- List of weights
 ws :: [Int]
-ws = [5,4,5,3,5,8,5,9]
+ws = [56,59,80,64,75,17]
 
 -- List of values
 vs :: [Int]
-vs = [3,3,7,2,6,7,5,8]
+vs = [50,50,64,46,50,5]
 
 knapSack :: Napsack [Int]
-knapSack = NS 15 8 ws vs
+knapSack = NS 190 6 ws vs
 
 -- Funtions to run an algorithm
 
 saInfo :: SAInfo
-saInfo = SAInfo 100 100.0
+saInfo = SAInfo 1000 100.0
 
 runSA = do
     g <- getStdGen
@@ -100,7 +100,7 @@ runHC = do
     print $ "Fitness value: " ++ show value
 
 gaInfo :: GAInfo
-gaInfo = GAInfo 512 0.1 200 18
+gaInfo = GAInfo 64 0.1 1000 1000
 
 runGA = do
     g <- getStdGen

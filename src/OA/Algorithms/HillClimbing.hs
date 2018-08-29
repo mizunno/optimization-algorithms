@@ -14,7 +14,7 @@ import OA.Utils.RandState
 
 -- |Hill Climbing algorithm
 hillClimbing :: (Problem p s) => p s -> RandState s
-hillClimbing problem = initial problem >>= (\ini -> climb ini)
+hillClimbing problem = initial problem >>= climb
             where 
                 climb solution = if valueNeighbour <= valueSolution
                     then return solution

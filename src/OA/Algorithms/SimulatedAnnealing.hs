@@ -13,7 +13,7 @@ import OA.Utils.RandState
 -- Simulate Annealing algorithm --
 ----------------------------------
 simulatedAnnealing :: (Problem p s) => p s -> SAInfo -> RandState s
-simulatedAnnealing prob (SAInfo ite temp) = initial prob >>= (\ini -> cool ite ite temp ini)
+simulatedAnnealing prob (SAInfo ite temp) = initial prob >>= cool ite ite temp
     where
         cool ite0 ite temp current = let t' = tempUpdate prob temp ite in
             if t' <= 1

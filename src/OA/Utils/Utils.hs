@@ -63,8 +63,8 @@ randomBinaryList' g ite = go g ite []
 -- |Return 'True' with probability p
 probability :: (Ord a, Fractional a) => a -> RandState Bool
 probability prob = do
-    p <- randomRange 10
-    let p' = fromIntegral p / 10
+    p <- randomRange 100
+    let p' = fromIntegral p / 100
     return $ p' <= prob
 
 probability' :: (RandomGen g, Random a, Ord a, Num a) => g -> a -> (Bool, g)
