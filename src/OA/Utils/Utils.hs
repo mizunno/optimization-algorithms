@@ -11,10 +11,10 @@ module OA.Utils.Utils (
     randomBinaryIO
 ) where
 
-import Data.List as L
-import Data.Ord as O
-import System.Random as R
-import OA.Utils.RandState
+import           Data.List          as L
+import           Data.Ord           as O
+import           OA.Utils.RandState
+import           System.Random      as R
 
 ----------------------
 -- Useful functions --
@@ -72,13 +72,13 @@ probability' g p = (p' <= p, g')
     where
         (p', g') = R.randomR (0,1) g
 
-        
+
 -- ### IO MONAD ### --
 
--- |Return a random bit (0,1) 
+-- |Return a random bit (0,1)
 randomBinaryIO :: IO Int
-randomBinaryIO = getStdGen >>= \g -> return $ fst $ randomR (0, 1) g 
-    
+randomBinaryIO = getStdGen >>= \g -> return $ fst $ randomR (0, 1) g
+
 -- |Choose a random element from a list
 randomChoiceIO :: [a] -> IO a
 randomChoiceIO xs = getStdGen >>= \g -> return $ fst $ randomChoice g xs

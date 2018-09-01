@@ -9,6 +9,7 @@ module OA.Utils.Operators (
     mutatePopulation,
     geometricUpdate,
     constantUpdate,
+    fittestSelection
 ) where
 
 import OA.Utils.Utils
@@ -87,7 +88,7 @@ onePointCrossover' chr1 chr2 = do
 twoPointCrossover :: Chromosome -> Chromosome -> RandState [Chromosome]
 twoPointCrossover chr1 chr2 = do
     p1 <- randomRange $ length chr1 - 1
-    p2 <- randomRange2 p1 $ length chr1 - 1
+    p2 <- randomRange2 (p1,length chr1 - 1)
     let chr1_1 = [i | (i,n) <- zip chr1 [0..length chr1], n < p1]
     let chr1_2 = [i | (i,n) <- zip chr1 [0..length chr1], n >= p1 && n <= p2]
     let chr1_3 = [i | (i,n) <- zip chr1 [0..length chr1], n > p2]
@@ -106,8 +107,8 @@ probabilityToBeSelected pop fitness chr = fitness chr / total
     where total = sum $ map fitness pop
 
 -- |Select the fittest chromosomes
-fittestSelection :: Population -> Fitness -> Population
-fittestSelection pop fitness = (take (div (length pop) 2) . reverse) $ L.sortOn fitness pop
+fittestSelection :: Population -> Fitness -> RandState Population
+fittestSelection pop fitness = return $ (take (div (length pop) 2) . reverse) $ L.sortOn fitness pop
 
 -- |Roulette Wheel Selection method
 rouletteWheelSelection :: Population -> Fitness -> RandState Population

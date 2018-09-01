@@ -1,10 +1,11 @@
-{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module OA.Core.ProblemGA(
     ProblemGA (..)
 ) where
 
-import OA.Utils.RandState
+import           OA.Utils.RandState
 
 class ProblemGA p s where
 
@@ -16,7 +17,7 @@ class ProblemGA p s where
 
     -- |Crossover method
     crossover :: p s -> [s] -> RandState [s]
-    
+
     -- |Mutation method
     mutation :: p s -> [s] -> Double -> RandState [s]
 

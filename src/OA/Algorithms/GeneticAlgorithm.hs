@@ -3,9 +3,9 @@ module OA.Algorithms.GeneticAlgorithm (
     GAInfo (..)
 ) where
 
-import OA.Core.ProblemGA
-import OA.Utils.Utils
-import OA.Utils.RandState
+import           OA.Core.ProblemGA
+import           OA.Utils.RandState
+import           OA.Utils.Utils
 
 -----------------------
 -- Genetic Algorithm --
@@ -29,8 +29,8 @@ geneticAlgorithm prob (GAInfo pSize mutRate gen fitLB) = (initialPopulation prob
 
 
 data GAInfo = GAInfo {
-    populationSize :: Int,
-    mutationRate :: Double,
-    generations :: Int,
+    populationSize    :: Int,
+    mutationRate      :: Double,
+    generations       :: Int,
     fitnessLowerBound :: Double
 }

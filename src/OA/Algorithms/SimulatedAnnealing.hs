@@ -1,13 +1,14 @@
-{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module OA.Algorithms.SimulatedAnnealing (
     simulatedAnnealing,
     SAInfo (..)
 ) where
 
-import OA.Core.Problem
-import OA.Utils.Utils
-import OA.Utils.RandState
+import           OA.Core.Problem
+import           OA.Utils.RandState
+import           OA.Utils.Utils
 
 ----------------------------------
 -- Simulate Annealing algorithm --
@@ -22,7 +23,7 @@ simulatedAnnealing prob (SAInfo ite temp) = initial prob >>= cool ite ite temp
                     next <- randomChoice' (neighborhood prob current)
                     let valueNext = fitness prob next
                     let valueCurrent = fitness prob current
-                    let deltaE = valueNext - valueCurrent 
+                    let deltaE = valueNext - valueCurrent
                     chooseBadSolution <- probability (exp $ deltaE / t')
                     if deltaE > 0 || chooseBadSolution
                         then
@@ -34,6 +35,6 @@ simulatedAnnealing prob (SAInfo ite temp) = initial prob >>= cool ite ite temp
 
 
 data SAInfo = SAInfo {
-    iterations :: Int,
+    iterations  :: Int,
     temperature :: Double
 }

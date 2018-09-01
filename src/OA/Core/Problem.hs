@@ -1,10 +1,11 @@
-{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module OA.Core.Problem (
     Problem (..)
 ) where
 
-import OA.Utils.RandState
+import           OA.Utils.RandState
 
 class Problem p s where
 
@@ -17,5 +18,5 @@ class Problem p s where
     -- |Returns a list with solutions that can be reached from 's'
     neighborhood :: p s -> s -> [s]
 
-    -- |Function to update temperature. Only with 
+    -- |Function to update temperature. Only with
     tempUpdate :: (Fractional a) => p s -> a -> Int -> a

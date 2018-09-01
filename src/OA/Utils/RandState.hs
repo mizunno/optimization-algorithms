@@ -5,6 +5,7 @@ module OA.Utils.RandState (
     getR,
     randomBinary,
     randomBinaryList,
+    randomDoubleList,
     RandState
 ) where
 
@@ -17,23 +18,23 @@ type RandState = State StdGen
 randomRange :: Int -> RandState Int
 randomRange upperBound = state $ randomR (0, upperBound)
 
-randomRange2 :: Int -> Int -> RandState Int
-randomRange2 lowerBound upperBound = state $ randomR (lowerBound, upperBound)
+randomRange2 :: (Int,Int) -> RandState Int
+randomRange2 (min,max) = state $ randomR (min, max)
 
 randomRange01 :: RandState Double
 randomRange01 = randomRange 10 >>= (\p -> return $ fromIntegral p / 10)
 
-randomRange01' :: RandState Double
-randomRange01' = do
-    p <- randomRange 10
-    let p' = fromIntegral p / 10
-    return p'
+randomRangeD :: (Double, Double) -> RandState Double
+randomRangeD (min,max) = state $ randomR (min, max)
 
 randomBinary :: RandState Int
 randomBinary = state $ randomR (0, 1)
 
 randomBinaryList :: Int -> RandState [Int]
-randomBinaryList l = replicateM l randomBinary
+randomBinaryList n = replicateM n randomBinary
+
+randomDoubleList :: Int -> (Double, Double) -> RandState [Double]
+randomDoubleList n bound = replicateM n $ randomRangeD bound
 
 getR :: RandState Int
 getR = state random
