@@ -23,11 +23,12 @@ dependencies:
 - base >= 4.7 && < 5
 - random
 - mtl
+- vector
 
 library:
   source-dirs: src
   exposed-modules:   OA.Examples.KnapsackProblem
-  ghc-options:       -Wall
+  --ghc-options:       -Wall
 
 tests:
   optimization-algorithms-test:

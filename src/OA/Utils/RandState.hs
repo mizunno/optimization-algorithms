@@ -2,6 +2,7 @@ module OA.Utils.RandState (
     randomRange,
     randomRange01,
     randomRange2,
+    randomRangeD,
     getR,
     randomBinary,
     randomBinaryList,
@@ -19,13 +20,13 @@ randomRange :: Int -> RandState Int
 randomRange upperBound = state $ randomR (0, upperBound)
 
 randomRange2 :: (Int,Int) -> RandState Int
-randomRange2 (min,max) = state $ randomR (min, max)
+randomRange2 (inf,sup) = state $ randomR (inf, sup)
 
 randomRange01 :: RandState Double
 randomRange01 = randomRange 10 >>= (\p -> return $ fromIntegral p / 10)
 
 randomRangeD :: (Double, Double) -> RandState Double
-randomRangeD (min,max) = state $ randomR (min, max)
+randomRangeD (inf,sup) = state $ randomR (inf, sup)
 
 randomBinary :: RandState Int
 randomBinary = state $ randomR (0, 1)
