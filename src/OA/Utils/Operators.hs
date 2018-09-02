@@ -12,13 +12,13 @@ module OA.Utils.Operators (
     fittestSelection
 ) where
 
-import OA.Utils.Utils
-import OA.Utils.RandState
-import Data.List as L
-import Data.Ord as O
-import System.Random
-import Control.Monad
-import Control.Applicative
+import           Control.Applicative
+import           Control.Monad
+import           Data.List           as L
+import           Data.Ord            as O
+import           OA.Utils.RandState
+import           OA.Utils.Utils
+import           System.Random
 
 type Gen = Int
 type Chromosome = [Gen]
@@ -51,9 +51,9 @@ bitFlipR chromosome = do
 bitFlipRWithProb :: Double -> Chromosome -> RandState Chromosome
 bitFlipRWithProb p chromosome = do
     i <- randomRange $ length chromosome - 1
-    runMutation <- probability p 
+    runMutation <- probability p
     return $ case runMutation of
-        True -> bitFlip chromosome i
+        True  -> bitFlip chromosome i
         False -> chromosome
 
 -------------------------
@@ -141,9 +141,9 @@ tournamentSelection pop fitness k = replicateM (div (length pop) 2) (`argMax` fi
 -- |Constant schedule
 constantUpdate :: (Fractional a) => a -> Int -> a -> a
 constantUpdate t 0 alfa = t - alfa
-constantUpdate t ite _ = t
+constantUpdate t ite _  = t
 
 -- |Geometric schedule
 geometricUpdate :: (Fractional a) => a -> Int -> a -> a
 geometricUpdate t 0 alfa = alfa * t
-geometricUpdate t ite _ = t
+geometricUpdate t ite _  = t

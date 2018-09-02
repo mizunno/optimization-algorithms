@@ -8,7 +8,11 @@ module OA.Utils.Utils (
     probabilityIO,
     probabilityIO',
     randomBinaryList',
-    randomBinaryIO
+    randomBinaryIO,
+    (|-|),
+    (|+|),
+    (|*|),
+    (|.|)
 ) where
 
 import           Data.List          as L
@@ -89,3 +93,15 @@ probabilityIO p = randomIO >>= \q -> return $! (q < p)
 
 probabilityIO' :: (R.Random a, Ord a, Num a) => a -> IO Bool
 probabilityIO' p = randomRIO (0, 10) >>= \q -> return $! (q < (p * 10))
+
+(|-|) :: [Double] -> [Double] -> [Double]
+x |-| y = zipWith (-) x y
+
+(|+|) :: [Double] -> [Double] -> [Double]
+x |+| y = zipWith (+) x y
+
+(|*|) :: [Double] -> [Double] -> [Double]
+x |*| y = zipWith (*) x y
+
+(|.|) :: Double -> [Double] -> [Double]
+x |.| vector = map (*x) vector

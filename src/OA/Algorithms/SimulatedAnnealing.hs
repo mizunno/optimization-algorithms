@@ -13,6 +13,7 @@ import           OA.Utils.Utils
 ----------------------------------
 -- Simulate Annealing algorithm --
 ----------------------------------
+
 simulatedAnnealing :: (Problem p s) => p s -> SAInfo -> RandState s
 simulatedAnnealing prob (SAInfo ite temp) = initial prob >>= cool ite ite temp
     where

@@ -10,9 +10,9 @@ module OA.Utils.RandState (
     RandState
 ) where
 
-import System.Random
-import Control.Monad.State
-import Control.Monad
+import           Control.Monad
+import           Control.Monad.State
+import           System.Random
 
 type RandState = State StdGen
 
