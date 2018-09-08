@@ -11,7 +11,7 @@ module OA.Utils.Utils (
     randomBinaryIO,
     (|-|),
     (|+|),
-    (|*|),
+--    (|*|),
     (|.|)
 ) where
 
@@ -100,8 +100,8 @@ x |-| y = zipWith (-) x y
 (|+|) :: [Double] -> [Double] -> [Double]
 x |+| y = zipWith (+) x y
 
-(|*|) :: [Double] -> [Double] -> [Double]
-x |*| y = zipWith (*) x y
+--(|*|) :: [Double] -> [Double] -> [Double]
+--x |*| y = zipWith (*) x y
 
 (|.|) :: Double -> [Double] -> [Double]
 x |.| vector = map (*x) vector
