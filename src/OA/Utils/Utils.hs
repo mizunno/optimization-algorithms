@@ -12,13 +12,15 @@ module OA.Utils.Utils (
     (|-|),
     (|+|),
 --    (|*|),
-    (|.|)
+    (|.|),
+    uniques
 ) where
 
 import           Data.List          as L
 import           Data.Ord           as O
 import           OA.Utils.RandState
 import           System.Random      as R
+import qualified Data.Set           as Set
 
 ----------------------
 -- Useful functions --
@@ -105,3 +107,5 @@ x |+| y = zipWith (+) x y
 
 (|.|) :: Double -> [Double] -> [Double]
 x |.| vector = map (*x) vector
+
+uniques lst = Set.toList $ Set.fromList lst

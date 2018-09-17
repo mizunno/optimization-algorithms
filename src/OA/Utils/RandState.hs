@@ -7,6 +7,7 @@ module OA.Utils.RandState (
     randomBinary,
     randomBinaryList,
     randomDoubleList,
+    randomBoundedList,
     RandState
 ) where
 
@@ -33,6 +34,9 @@ randomBinary = state $ randomR (0, 1)
 
 randomBinaryList :: Int -> RandState [Int]
 randomBinaryList n = replicateM n randomBinary
+
+randomBoundedList :: (Int,Int) -> Int -> RandState [Int]
+randomBoundedList (inf,sup) n = replicateM n $ randomRange2 (inf,sup)
 
 randomDoubleList :: Int -> (Double, Double) -> RandState [Double]
 randomDoubleList n bound = replicateM n $ randomRangeD bound

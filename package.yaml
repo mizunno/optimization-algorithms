@@ -1,5 +1,5 @@
 name:                optimization-algorithms
-version:             0.1.0.0
+version:             0.1.0
 github:              mizunno/optimization-algorithms
 license:             BSD3
 author:              Pedro García Victoria
@@ -23,11 +23,13 @@ dependencies:
 - base >= 4.7 && < 5
 - random
 - mtl
-- vector
+- hspec
+- QuickCheck >= 2.7
+- containers >= 0.6.0.1 
 
 library:
   source-dirs: src
-  exposed-modules:   OA.Examples.KnapsackProblem
+  exposed-modules:   OA.Utils.Operators, OA.Utils.RandState
   --ghc-options:       -Wall
 
 tests:

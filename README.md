@@ -10,11 +10,21 @@ This project has been developed as part of my bachelor thesis and to improve my 
 
 To install this library and use it in your haskell project, you can downoad it using `stack` or `cabal`.
 
-### Prerequisites
+#### Stack
+
+```
+stack install optimization-algorithms
+```
+
+#### Cabal
+
+```
+cabal install optimization-algorithms
+```
 
 ### Installing from source
 
-##### Unix or Linux
+#### Unix or Linux
 
 Download it:
 
@@ -22,7 +32,7 @@ Download it:
 git clone https://github.com/mizunno/optimization-algorithms.git
 ```
 
-Unpack tar file:
+Unpack the tar file:
 ```
 tar xzf optimization-algorithms-XXX.tar.gz
 ```
@@ -41,6 +51,6 @@ sudo runhaskell Setup install
 
 For more information about installation, see https://wiki.haskell.org/Cabal/How_to_install_a_Cabal_package
 
-##### Windows
+#### Windows
 
 See https://wiki.haskell.org/Cabal/How_to_install_a_Cabal_package

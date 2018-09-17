@@ -19,13 +19,13 @@ geneticAlgorithm prob (GAInfo pSize mutRate gen fitLB) = initialPopulation prob 
         evolve mutRate gen pop = do
                 pops <- selection prob pop
                 popc <- crossover prob pops
-                popm <- mutation prob popc mutRate
-                let best = argMax popm (fitnessGA prob)
+                popp@(c1:c2:popm) <- mutation prob popc mutRate
+                let best = argMax popp (fitnessGA prob)
                 let value = fitnessGA prob best
                 if value >= fitLB then
-                    evolve mutRate 0 popm
+                    evolve mutRate 0 (best:best:popm)
                 else
-                    evolve mutRate (gen-1) popm
+                    evolve mutRate (gen-1) (best:best:popm)
 
 
 data GAInfo = GAInfo {

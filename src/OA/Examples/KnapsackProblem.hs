@@ -53,14 +53,17 @@ instance Problem Napsack [Int] where
 
     initial (NS _ numO _ _) = randomBinaryList numO
 
-    fitness (NS size numO weights values) solution = fromIntegral $ if w > size then v-w*1000000 else v
+    fitness (NS size numO weights values) solution = fromIntegral $ if w > size then v-w*10 else v
         where
             v = sum $ zipWith (*) solution values
             w = sum $ zipWith (*) solution weights
 
-    neighborhood NS{} solution = [bitFlip solution n | n <- [0..length solution - 1]]
+    neighborhood NS{} solution = concatMap (neig2) $ [bitFlip solution n | n <- [0..length solution - 1]]
 
     tempUpdate _ t ite = constantUpdate t ite 1
+
+neig2 solution = [bitFlip solution n | n <- [0..length solution - 1]]
+
 
 -- Funtions to run an algorithm
 
@@ -78,24 +81,26 @@ runSA = do
 runHC = do
     g <- getStdGen
     print "Resolving with Hill Climbing..."
-    let solution = evalState (hillClimbing p2) g
-    let value = fitness p2 solution
+    let solution = evalState (hillClimbing p3) g
+    let value = fitness p3 solution
     print $ "Solution: " ++ show solution
     print $ "Fitness value: " ++ show value
 
 gaInfo :: GAInfo
-gaInfo = GAInfo 512 0.1 100 100
+gaInfo = GAInfo 4096 0.15 100 0
 
 runGA = do
     g <- getStdGen
     print "Resolving with Genetic Algorithm..."
-    let pop = evalState (geneticAlgorithm p2 gaInfo) g
-    let best = argMax pop (fitnessGA p2)
-    let value = fitnessGA p2 best
+    let pop = evalState (geneticAlgorithm p4 gaInfo) g
+    let best = argMax pop (fitnessGA p4)
+    let value = fitnessGA p4 best
     print $ "Solution: " ++ show best
     print $ "Fitness value: " ++ show value
-    print $ best == p2Solution
+    print $ bests == best
 
+p0 :: Napsack [Int]
+p0 = NS 15 8 [5,4,5,3,5,8,5,9] [3,3,7,2,6,7,5,8] 
 
 p1 :: Napsack [Int]
 p1 = NS 165 10 [23,31,29,44,53,38,63,85,89,82] [92,57,49,68,60,43,67,84,87,72]

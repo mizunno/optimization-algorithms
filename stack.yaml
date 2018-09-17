@@ -39,8 +39,6 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 extra-deps:
-- haddock-api-2.20.0
-- haddock-library-1.6.0
 
 
 # Override default flag values for local packages and extra-deps

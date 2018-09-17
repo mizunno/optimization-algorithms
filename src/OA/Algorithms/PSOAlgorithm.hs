@@ -11,8 +11,8 @@ import           OA.Utils.RandState
 -- Particle Swarm Optimization --
 ---------------------------------
 
-psoAlgorithm :: PSOInfo -> Int -> ([Double] -> Double) -> RandState [Double]
-psoAlgorithm (PSOInfo dim b@(inf,sup) num vMax) ite f = initialSwarm num dim b vMax >>= go ite (replicate dim 0)
+psoAlgorithm :: PSOInfo -> ([Double] -> Double) -> RandState [Double]
+psoAlgorithm (PSOInfo dim b@(inf,sup) num vMax ite) f = initialSwarm num dim b vMax >>= go ite (replicate dim 0)
     where
         go 0 gbest _ = return gbest
         go ite gbest swarm = do
@@ -25,5 +25,6 @@ data PSOInfo = PSOInfo {
     dimension    :: Int,
     bounds       :: (Double,Double),
     numParticles :: Int,
-    vMax         :: Double
+    vMax         :: Double,
+    iterations   :: Int
 }

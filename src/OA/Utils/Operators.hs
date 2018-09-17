@@ -9,7 +9,10 @@ module OA.Utils.Operators (
     mutatePopulation,
     geometricUpdate,
     constantUpdate,
-    fittestSelection
+    fittestSelection,
+    plusXMutation,
+    twoOpt,
+    twoOptRWithProb
 ) where
 
 import           Control.Applicative
@@ -56,6 +59,30 @@ bitFlipRWithProb p chromosome = do
         True  -> bitFlip chromosome i
         False -> chromosome
 
+plusXMutation (x:xs) 0 n s = (x+s) `mod` n : xs
+plusXMutation (x:xs) i n s = x : plusXMutation xs (i-1) n s
+
+twoOpt :: Int -> Int -> [a] -> [a]
+twoOpt i j xs = [get k x | (k, x) <- zip [0..length xs - 1] xs]
+    where get k x | k == i = xs !! j
+                  | k == j = xs !! i
+                  | otherwise = x
+
+twoOptR :: [a] -> RandState [a]
+twoOptR xs = do
+    i <- randomRange2 (0, length xs-1)
+    j <- randomRange2 (0, length xs-1)
+    let swappedXs = twoOpt i j xs
+    return swappedXs
+
+twoOptRWithProb :: Double -> [a] -> RandState [a]
+twoOptRWithProb p xs = do
+    run <- probability p
+    i <- randomRange2 (0, length xs-1)
+    j <- randomRange2 (0, length xs-1)
+    return $ case run of
+        True  -> twoOpt i j xs
+        False -> xs    
 -------------------------
 -- CROSSOVER OPERATORS --
 -------------------------

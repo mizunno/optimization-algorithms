@@ -12,7 +12,6 @@ module OA.Core.ProblemPSO(
 
 import           Control.Monad
 import           Control.Monad.State
-import qualified Data.Vector
 import           OA.Utils.RandState
 import           OA.Utils.Utils
 import           System.Random
