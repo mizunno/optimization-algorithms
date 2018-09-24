@@ -55,9 +55,7 @@ bitFlipRWithProb :: Double -> Chromosome -> RandState Chromosome
 bitFlipRWithProb p chromosome = do
     i <- randomRange $ length chromosome - 1
     runMutation <- probability p
-    return $ case runMutation of
-        True  -> bitFlip chromosome i
-        False -> chromosome
+    return $ if runMutation then bitFlip chromosome i else chromosome
 
 plusXMutation (x:xs) 0 n s = (x+s) `mod` n : xs
 plusXMutation (x:xs) i n s = x : plusXMutation xs (i-1) n s
@@ -80,9 +78,8 @@ twoOptRWithProb p xs = do
     run <- probability p
     i <- randomRange2 (0, length xs-1)
     j <- randomRange2 (0, length xs-1)
-    return $ case run of
-        True  -> twoOpt i j xs
-        False -> xs    
+    return $ if run then twoOpt i j xs else xs
+
 -------------------------
 -- CROSSOVER OPERATORS --
 -------------------------

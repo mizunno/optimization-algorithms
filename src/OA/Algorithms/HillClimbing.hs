@@ -1,13 +1,12 @@
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 module OA.Algorithms.HillClimbing (
-    hillClimbing,
+    runHC,
 ) where
 
+import           Control.Monad.State
 import           OA.Core.Problem
 import           OA.Utils.RandState
 import           OA.Utils.Utils
+import           System.Random
 
 -----------------------------
 -- Hill Climbing algorithm --
@@ -24,3 +23,9 @@ hillClimbing problem = initial problem >>= climb
                         valueNeighbour = fitness problem neighbour
                         valueSolution = fitness problem solution
                         neighbour = argMax (neighborhood problem solution) (fitness problem)
+
+runHC prob = do
+    g <- getStdGen
+    let best = evalState (hillClimbing prob) g
+    let value = fitness prob best
+    return (best,value)

@@ -108,4 +108,5 @@ x |+| y = zipWith (+) x y
 (|.|) :: Double -> [Double] -> [Double]
 x |.| vector = map (*x) vector
 
+uniques :: Ord a => [a] -> [a]
 uniques lst = Set.toList $ Set.fromList lst

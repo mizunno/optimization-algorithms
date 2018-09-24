@@ -8,6 +8,7 @@ module OA.Utils.RandState (
     randomBinaryList,
     randomDoubleList,
     randomBoundedList,
+    shuffle,
     RandState
 ) where
 
@@ -40,6 +41,12 @@ randomBoundedList (inf,sup) n = replicateM n $ randomRange2 (inf,sup)
 
 randomDoubleList :: Int -> (Double, Double) -> RandState [Double]
 randomDoubleList n bound = replicateM n $ randomRangeD bound
+
+shuffle :: [a] -> RandState [a]
+shuffle x = if length x < 2 then return x else do
+    i <- randomRange2 (0, length x - 1)
+    r <- shuffle (take i x ++ drop (i+1) x)
+    return (x!!i : r)
 
 getR :: RandState Int
 getR = state random

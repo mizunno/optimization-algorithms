@@ -1,11 +1,13 @@
 module OA.Algorithms.GeneticAlgorithm (
-    geneticAlgorithm,
+    runGA,
     GAInfo (..)
 ) where
 
+import           Control.Monad.State
 import           OA.Core.ProblemGA
 import           OA.Utils.RandState
 import           OA.Utils.Utils
+import           System.Random
 
 -----------------------
 -- Genetic Algorithm --
@@ -19,13 +21,13 @@ geneticAlgorithm prob (GAInfo pSize mutRate gen fitLB) = initialPopulation prob 
         evolve mutRate gen pop = do
                 pops <- selection prob pop
                 popc <- crossover prob pops
-                popp@(c1:c2:popm) <- mutation prob popc mutRate
-                let best = argMax popp (fitnessGA prob)
+                popm <- mutation prob popc mutRate
+                let best = argMax popm (fitnessGA prob)
                 let value = fitnessGA prob best
                 if value >= fitLB then
-                    evolve mutRate 0 (best:best:popm)
+                    evolve mutRate 0 popm
                 else
-                    evolve mutRate (gen-1) (best:best:popm)
+                    evolve mutRate (gen-1) popm
 
 
 data GAInfo = GAInfo {
@@ -34,3 +36,10 @@ data GAInfo = GAInfo {
     generations       :: Int,
     fitnessLowerBound :: Double
 }
+
+runGA prob gainfo = do
+    g <- getStdGen
+    let pop = evalState (geneticAlgorithm prob gainfo) g
+    let best = argMax pop (fitnessGA prob)
+    let value = fitnessGA prob best
+    return (best,value)

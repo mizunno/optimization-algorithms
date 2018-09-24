@@ -1,14 +1,13 @@
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 module OA.Algorithms.SimulatedAnnealing (
-    simulatedAnnealing,
+    runSA,
     SAInfo (..)
 ) where
 
+import           Control.Monad.State
 import           OA.Core.Problem
 import           OA.Utils.RandState
 import           OA.Utils.Utils
+import           System.Random
 
 ----------------------------------
 -- Simulate Annealing algorithm --
@@ -39,3 +38,9 @@ data SAInfo = SAInfo {
     iterations  :: Int,
     temperature :: Double
 }
+
+runSA prob sainfo = do
+    g <- getStdGen
+    let best = evalState (simulatedAnnealing prob sainfo) g
+    let value = fitness prob best
+    return (best,value)

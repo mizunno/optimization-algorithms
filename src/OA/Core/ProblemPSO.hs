@@ -1,6 +1,3 @@
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-
 module OA.Core.ProblemPSO(
     Particle(..),
     initialSwarm,
@@ -67,8 +64,8 @@ updateVelocity bound vMax gbest f p@(Particle c b v) = do
     r1 <- randomRangeD (0,1)
     r2 <- randomRangeD (0,1)
     w <- randomInertiaWeight
-    let c1 = (2 * evalFitness f p) / (evalFitness f p + f gbest)
-    let c2 = (2 * f gbest) / (evalFitness f p + f gbest)
+    let c1 = 2 --(2 * evalFitness f p) / (evalFitness f p + f gbest)
+    let c2 = 2 --(2 * f gbest) / (evalFitness f p + f gbest)
     let v' = (w |.| v) |+| ((r1*c1) |.| (gbest |-| c)) |+| ((r2*c2) |.| (b |-| c))
     let c' = c |+| v'
     return $ Particle (fixPosition bound c') b (fixVelocity vMax v')
@@ -85,7 +82,7 @@ fixPosition (inf,sup) = map (flower . fupper)
     where fupper xi = if xi > sup then sup else xi
           flower xi = if xi < inf then inf else xi
 
--- |Constant inertia 
+-- |Constant inertia
 constantInertiaWeight :: RandState Double
 constantInertiaWeight = return 0.5
 
