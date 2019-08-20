@@ -1,4 +1,4 @@
-# README UNDER DEVELOPMENT
+# THIS LIBRARY CAN'T BE INSTALLED.
 
 # Optimization Algorithms
 
